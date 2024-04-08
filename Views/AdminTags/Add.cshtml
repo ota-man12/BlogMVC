@@ -16,7 +16,8 @@
                    class="form-control"
                    id="name"
                    placeholder="Name"
-                   asp-for="Name" />
+                   asp-for="Name" required />
+            <span class="text-danger" asp-validation-for="Name"></span>
         </div>
         <div class="mb-3">
             <label class="form-lable">Display Name:</label>
@@ -24,7 +25,8 @@
                    class="form-control"
                    id="displayName"
                    placeholder="Display Name"
-                   asp-for="DisplayName" />
+                   asp-for="DisplayName" required />
+            <span class="text-danger" asp-validation-for="DisplayName"></span>
         </div>
         <div class="mb-3">
             <div class="d-flex">

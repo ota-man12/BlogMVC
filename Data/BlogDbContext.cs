@@ -5,7 +5,7 @@ namespace BlogMVC.Web.Data
 {
     public class BlogDbContext : DbContext
     {
-        public BlogDbContext(DbContextOptions options) : base(options)
+        public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options)
         {
 
         }
@@ -14,6 +14,8 @@ namespace BlogMVC.Web.Data
         public DbSet<BlogPost> BlogPosts { get; set; }
         //Creating Tag Base Table
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<BlogPostLike> BlogPostLike { get; set; }
+        public DbSet<BlogPostComment> BlogPostComments { get; set; }
 
     }
 }

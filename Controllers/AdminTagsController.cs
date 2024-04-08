@@ -1,10 +1,12 @@
 ﻿using BlogMVC.Web.Models.Domain;
 using BlogMVC.Web.Models.ViewModels;
 using BlogMVC.Web.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogMVC.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminTagsController : Controller
     {
         private readonly ITagRepository tagRepository;
@@ -14,7 +16,7 @@ namespace BlogMVC.Web.Controllers
         {
             this.tagRepository = tagRepository;
         }
-        // GET: /<controller>/
+
         [HttpGet]
         public IActionResult Add()
         {
@@ -24,6 +26,12 @@ namespace BlogMVC.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddTagRequest addTagRequest)
         {
+            ValidateAddTagRequest(addTagRequest);
+            if (ModelState.IsValid == false)
+            {
+                return View();
+            }
+
             //Mapping AddTagRequest to Tag domain model
             var tag = new Tag
             {
@@ -88,6 +96,7 @@ namespace BlogMVC.Web.Controllers
         }
 
         //Delete
+        [HttpPost]
         public async Task<IActionResult> Delete(EditTagRequest editTagRequest)
         {
             var deletedTag = await tagRepository.DeleteAsync(editTagRequest.Id);
@@ -102,11 +111,22 @@ namespace BlogMVC.Web.Controllers
         }
 
         //Back to list
+        [Authorize(Roles = "Admin")]
         public IActionResult Back()
         {
             return RedirectToAction("List");
         }
 
+        private void ValidateAddTagRequest(AddTagRequest addTagRequest)
+        {
+            if (addTagRequest.Name is not null && addTagRequest.DisplayName is not null)
+            {
+                if (addTagRequest.Name == addTagRequest.DisplayName)
+                {
+                    ModelState.AddModelError("DisplayName", "Name cannot be the same as the DisplayName");
+                }
+            }
+        }
     }
 }
 
